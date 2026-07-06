@@ -138,7 +138,7 @@ Although this approach may reduce unused memory in certain workloads, it introdu
 This idea can be explored as an experimental or research-oriented project rather than a production implementation.ed as a good learning project.
 
 -**INTERNAL REPRESENTATION** 
-
+![DYNAMIC ARRAY](/docs/design_proposal/images/ChatGPT%20Image%20Jul%206,%202026,%2003_44_06%20PM.png)
 
 
 
