@@ -383,6 +383,199 @@ is performed in **O(1)** time regardless of the size of the array.
 | Delete from Front | O(n) | O(n) | O(n) |
 | Delete from Middle | O(n) | O(n) | O(n) |
 | Delete from End | O(1) | O(1) | O(1) |
+---
+# Design Decisions
+
+While implementing the dynamic array, several design decisions were made to ensure that the implementation remains simple, efficient, and generic. These decisions influence the memory management strategy, resizing mechanism, and the overall flexibility of the data structure.
+
+---
+
+## 1. Generic Programming using Templates
+
+The dynamic array is implemented using **C++ templates**.
+
+```cpp
+template <typename T>
+class Vector
+{
+    ...
+};
+```
+
+Using templates allows the same implementation to work with different data types without rewriting the code.
+
+### Advantages
+
+- Supports any user-defined or primitive data type.
+- Eliminates code duplication.
+- Type-safe implementation.
+- Compile-time polymorphism.
+
+For example,
+
+```cpp
+Vector<int> v1;
+Vector<double> v2;
+Vector<string> v3;
+```
+
+All three objects use the same implementation.
+
+---
+
+## 2. Memory Allocation Strategy
+
+The implementation uses the C standard library memory allocation functions.
+
+### `malloc()`
+
+Used to allocate a contiguous block of memory.
+
+```cpp
+ptr = (T*)malloc(capacity * sizeof(T));
+```
+
+Characteristics:
+
+- Allocates memory on the **Heap**.
+- Returns a `void*`.
+- Does **not** initialize the allocated memory.
+- Time Complexity: **O(1)**
+
+---
+
+### `calloc()`
+
+Used whenever zero-initialized memory is required.
+
+```cpp
+ptr = (T*)calloc(capacity, sizeof(T));
+```
+
+Characteristics:
+
+- Allocates memory on the **Heap**.
+- Initializes every byte with zero.
+- Returns a `void*`.
+- Time Complexity: **O(n)** (initialization cost)
+
+---
+
+### `free()`
+
+Used to release dynamically allocated memory.
+
+```cpp
+free(ptr);
+```
+
+Characteristics:
+
+- Prevents memory leaks.
+- Releases heap memory back to the operating system.
+- Used whenever the old memory block is no longer required after resizing.
+
+---
+
+## 3. Resizing Strategy
+
+One of the most important design decisions in a dynamic array is deciding **how much additional memory should be allocated** when the array becomes full.
+
+In this implementation, the capacity is doubled whenever
+
+```
+size == capacity
+```
+
+The resizing formula is
+
+```
+New Capacity = 2 × Old Capacity
+```
+
+Example
+
+| Current Capacity | New Capacity |
+|-----------------:|-------------:|
+| 1 | 2 |
+| 2 | 4 |
+| 4 | 8 |
+| 8 | 16 |
+| 16 | 32 |
+
+---
+
+### Why choose a resizing factor of **2**?
+
+Using a growth factor of **2** provides a good balance between memory usage and performance.
+
+Advantages:
+
+- Reduces the number of reallocations.
+- Provides **Amortized O(1)** insertion at the end.
+- Simple and efficient implementation.
+- Minimizes the total number of element copies over multiple insertions.
+- Commonly used in many dynamic array implementations.
+
+Although a smaller growth factor (such as **1.5×**) may reduce unused memory, it increases the frequency of reallocations. On the other hand, a much larger growth factor wastes memory. Therefore, doubling the capacity offers a practical trade-off between performance and memory utilization.
+
+---
+
+## 4. Internal Data Members
+
+The dynamic array maintains the following private data members.
+
+```cpp
+size_t size;
+size_t capacity;
+T* ptr;
+```
+
+| Variable | Purpose |
+|----------|---------|
+| `size` | Number of elements currently stored. |
+| `capacity` | Total number of elements that can be stored before resizing is required. |
+| `ptr` | Pointer to the dynamically allocated contiguous memory block. |
+
+---
+
+## 5. Memory Layout
+
+```
+               Stack
+
+        +----------------------+
+        | size = 5             |
+        | capacity = 8         |
+        | ptr -----------------|-------------------+
+        +----------------------+                   |
+                                                   |
+                                                   ▼
+
+                         Heap
+
+        +----+----+----+----+----+----+----+----+
+        |10  |20  |30  |40  |50  |    |    |    |
+        +----+----+----+----+----+----+----+----+
+```
+
+The object stores only the metadata (`size`, `capacity`, and `ptr`) on the stack, while the actual elements are stored in a contiguous block of heap memory.
+
+---
+
+## Summary of Design Decisions
+
+| Feature | Design Choice |
+|---------|---------------|
+| Generic Programming | C++ Templates (`template<typename T>`) |
+| Memory Allocation | `malloc()` |
+| Zero Initialization | `calloc()` |
+| Memory Deallocation | `free()` |
+| Growth Strategy | Capacity × 2 |
+| Memory Storage | Heap |
+| Metadata Storage | Stack |
+| End Insertion Complexity | **O(1)** (Amortized) |
+| Random Access | **O(1)** |
 
 
 
