@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="520" viewBox="0 0 1040 520">
+  <rect width="1040" height="520" fill="#ffffff"/>
+  <text x="30" y="42" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Pop Operation: Delete Last Node</text>
+  <text x="45" y="90" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2937">Before pop()</text>
+  <text x="45" y="320" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2937">After pop()</text>
+
+  <g transform="translate(110,115)">
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#111827">head</text>
+    <line x1="45" y1="30" x2="90" y2="30" stroke="#111827" stroke-width="2"/>
+    <polygon points="90,30 78,23 78,37" fill="#111827"/>
+    <rect x="90" y="0" width="115" height="60" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+    <rect x="205" y="0" width="80" height="60" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+    <text x="113" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">10</text>
+    <line x1="285" y1="30" x2="355" y2="30" stroke="#111827" stroke-width="2"/>
+    <polygon points="355,30 343,23 343,37" fill="#111827"/>
+    <rect x="355" y="0" width="115" height="60" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+    <rect x="470" y="0" width="80" height="60" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+    <text x="378" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">20</text>
+    <text x="383" y="88" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d">temp stops here</text>
+    <line x1="550" y1="30" x2="620" y2="30" stroke="#111827" stroke-width="2"/>
+    <polygon points="620,30 608,23 608,37" fill="#111827"/>
+    <rect x="620" y="0" width="115" height="60" fill="#fecaca" stroke="#b91c1c" stroke-width="2"/>
+    <rect x="735" y="0" width="105" height="60" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
+    <text x="643" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">30</text>
+    <text x="755" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">NULL</text>
+    <text x="650" y="-16" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#111827">tail / last</text>
+  </g>
+
+  <g transform="translate(110,345)">
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#111827">head</text>
+    <line x1="45" y1="30" x2="90" y2="30" stroke="#111827" stroke-width="2"/>
+    <polygon points="90,30 78,23 78,37" fill="#111827"/>
+    <rect x="90" y="0" width="115" height="60" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+    <rect x="205" y="0" width="80" height="60" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+    <text x="113" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">10</text>
+    <line x1="285" y1="30" x2="355" y2="30" stroke="#111827" stroke-width="2"/>
+    <polygon points="355,30 343,23 343,37" fill="#111827"/>
+    <rect x="355" y="0" width="115" height="60" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+    <rect x="470" y="0" width="105" height="60" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
+    <text x="378" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">20</text>
+    <text x="490" y="36" font-family="Arial, sans-serif" font-size="15" font-weight="700">NULL</text>
+    <text x="380" y="-16" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#111827">new tail</text>
+    <rect x="705" y="-5" width="120" height="70" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8 5"/>
+    <text x="730" y="28" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#6b7280">old 30</text>
+    <text x="718" y="50" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">freed</text>
+  </g>
+</svg>

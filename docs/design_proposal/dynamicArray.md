@@ -58,6 +58,243 @@ So  class basically consists of value and their accesfiers and their encapsulate
 -pointer
 -***Functions***
 They are the Functions already explained in the funtions api [Functions]
+---
+## Rule of Three
+
+The dynamic array implemented in this project manages memory manually using dynamic memory allocation. Since the class owns a dynamically allocated resource, it follows the **Rule of Three**.
+
+The **Rule of Three** states that:
+
+> **If a class defines any one of the following special member functions, it should generally define all three.**
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+This ensures that objects correctly manage their own resources and prevents issues such as **memory leaks**, **dangling pointers**, and **double-free errors**.
+
+---
+
+## Why is the Rule of Three Required?
+
+The dynamic array stores its elements in dynamically allocated heap memory.
+
+```
+               Stack                           Heap
+
+        +------------------+
+        | size             |
+        | capacity         |
+        | ptr ------------ |----------------------+
+        +------------------+                      |
+                                                  ▼
+
+                                    +----+----+----+----+
+                                    | 10 | 20 | 30 | 40 |
+                                    +----+----+----+----+
+```
+
+Since the object owns the heap memory, copying the object incorrectly can lead to multiple objects pointing to the same memory.
+
+---
+
+## Problem Without Rule of Three
+
+Consider the following code.
+
+```cpp
+Vector<int> v1;
+
+v1.push_back(10);
+v1.push_back(20);
+
+Vector<int> v2 = v1;
+```
+
+If the compiler-generated copy constructor is used, only the pointer is copied.
+
+```
+v1.ptr ───────────────┐
+                      │
+                      ▼
+                Heap Memory
+
+v2.ptr ───────────────┘
+```
+
+Both objects now refer to the same memory.
+
+When the objects are destroyed,
+
+```cpp
+free(v1.ptr);
+free(v2.ptr);
+```
+
+the same memory is released twice.
+
+This results in **Undefined Behavior**.
+
+Possible consequences include:
+
+- Double Free Error
+- Dangling Pointer
+- Program Crash
+- Memory Corruption
+
+To avoid these issues, a **deep copy** must be performed.
+
+---
+
+## 1. Destructor
+
+The destructor is automatically called when an object goes out of scope.
+
+Its responsibility is to release the dynamically allocated heap memory.
+
+```cpp
+~Vector()
+{
+    free(ptr);
+}
+```
+
+### Responsibilities
+
+- Release heap memory.
+- Prevent memory leaks.
+- Destroy the owned resource.
+
+---
+
+## 2. Copy Constructor
+
+The copy constructor is invoked when a new object is created from an existing object.
+
+```cpp
+Vector(const Vector& other);
+```
+
+Instead of copying only the pointer, the copy constructor performs a **deep copy**.
+
+### Steps
+
+1. Allocate new memory.
+2. Copy every element from the source object.
+3. Store the new pointer inside the new object.
+
+```
+Before Copy
+
+v1
+
+ptr ─────────► Heap A
+
+
+After Deep Copy
+
+v1.ptr ─────► Heap A
+
+v2.ptr ─────► Heap B
+```
+
+Both objects now own independent memory.
+
+---
+
+## 3. Copy Assignment Operator
+
+The copy assignment operator is called when an already existing object is assigned another object.
+
+```cpp
+Vector& operator=(const Vector& other);
+```
+
+Example
+
+```cpp
+Vector<int> v1;
+Vector<int> v2;
+
+v2 = v1;
+```
+
+### Steps
+
+1. Check for self-assignment.
+2. Free the old memory.
+3. Allocate new memory.
+4. Copy every element.
+5. Return the current object.
+
+This guarantees that every object owns its own memory.
+
+---
+
+## Deep Copy vs Shallow Copy
+
+### Shallow Copy
+
+```
+Object A
+
+ptr ───────────────┐
+                   │
+                   ▼
+             Heap Memory
+                   ▲
+                   │
+ptr ───────────────┘
+
+Object B
+```
+
+Problems
+
+- Double Free
+- Dangling Pointer
+- Shared Ownership
+- Undefined Behavior
+
+---
+
+### Deep Copy
+
+```
+Object A
+
+ptr ─────────► Heap A
+
+
+Object B
+
+ptr ─────────► Heap B
+```
+
+Advantages
+
+- Independent objects.
+- Safe destruction.
+- No shared ownership.
+- No double free.
+
+---
+
+## Summary
+
+| Special Function | Purpose |
+|------------------|---------|
+| Destructor | Releases dynamically allocated memory. |
+| Copy Constructor | Creates a deep copy while constructing a new object. |
+| Copy Assignment Operator | Creates a deep copy while assigning an existing object. |
+
+---
+
+## Conclusion
+
+Since the dynamic array manually manages heap memory, implementing the **Rule of Three** is essential. It ensures that every object correctly owns and manages its resources, preventing memory leaks, dangling pointers, shallow copies, and double-free errors.
+
+> **Note:** In modern C++ (C++11 and later), the Rule of Three is extended to the **Rule of Five**, which additionally includes the **Move Constructor** and **Move Assignment Operator** to improve performance by transferring ownership of resources instead of copying them.
 
 ---
 -***MEMORY MANAGEMENT IN DYNAMIC ARRAY**
@@ -138,7 +375,7 @@ Although this approach may reduce unused memory in certain workloads, it introdu
 This idea can be explored as an experimental or research-oriented project rather than a production implementation.ed as a good learning project.
 
 -**INTERNAL REPRESENTATION** 
-![DYNAMIC ARRAY](/docs/design_proposal/images/ChatGPT%20Image%20Jul%206,%202026,%2003_44_06%20PM.png)
+![DYNAMIC ARRAY](/docs/design_proposal/images/images/ChatGPT%20Image%20Jul%206,%202026,%2003_44_06%20PM.png)
 ---
 # Time Complexity Analysis of Dynamic Array
 
