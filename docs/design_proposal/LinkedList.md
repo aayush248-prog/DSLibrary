@@ -1,566 +1,635 @@
-# Singly Linked List Using `malloc()` and `free()`
+**Project Title:** Building a Data Structures Library and Redis Lite  
+**Student Name:** Suman Mondal  
+**Date:** 07 July 2026
 
-A **Singly Linked List (SLL)** is a linear dynamic data structure in which each node contains two main parts: a **value** field and a pointer to the **next** node. Unlike an array, a linked list does not store elements in continuous memory locations. Each node is created separately on the heap, and nodes are connected using pointers.
+# Linked List Design Proposal
 
-In this implementation, the linked list uses two important pointers:
+This proposal describes the design and implementation of the **Linked List** data structure developed as part of the **Data Structures Library**. It explains the public interface, internal structure, complexity estimates, and key design decisions used during implementation.
 
-- `head`: points to the first node of the list.
-- `tail`: points to the last node of the list.
+The proposal is divided into four sections:
 
-Because a singly linked list only stores a `next` pointer, traversal is possible only in the forward direction. We can move from `head` to `tail`, but we cannot directly move backward from `tail` to the previous node.
+1. **Public API**
+2. **Internal Structure**
+3. **Complexity Estimates**
+4. **Design Decisions**
 
-This design follows the user's code and uses:
+A **Linked List** is a linear data structure in which elements are stored as individual **nodes**. Each node contains the actual data and a pointer to the next node in the sequence. Unlike arrays, linked list nodes are **not stored in contiguous memory locations**. Instead, they are dynamically allocated and connected through pointers.
 
-- `malloc()` for memory allocation.
-- `free()` for memory deallocation.
-- No `new`.
-- No `delete`.
+Because nodes are allocated individually, the linked list can grow by adding new nodes and shrink by deleting existing nodes. It does not need a fixed capacity like a static array or a resizing strategy like a dynamic array.
 
-## Section 1: Public API
+The linked list is implemented as a **class template** using `template<typename T>`. This allows the same implementation to store values of any valid C++ type, including primitive types, Standard Library objects, and user-defined classes.
 
-The public API is the set of functions that the user can call on the linked list object.
+---
 
-### 1. Constructor
+# Section 1: Public API
 
-```cpp
-Linkedlist(T val);
-```
+The **Public API** defines the functions available to the user of the `LinkedList` class. It includes insertion, deletion, access, search, traversal, and size-related operations.
 
-The constructor creates the first node of the linked list. It allocates memory for one node using `malloc()`, stores the given value in that node, sets the node's `next` pointer to `NULL`, and makes both `head` and `tail` point to this first node.
+The purpose of this API is to make the linked list:
 
-### 2. `push(T val)`
+- Simple to use
+- Reusable for different data types
+- Safe against invalid operations
+- Consistent with common data structure interfaces
+- Easy to maintain and extend
 
-```cpp
-void push(T val);
-```
-
-The `push()` function inserts a new node at the end of the linked list. Since the list maintains a `tail` pointer, insertion at the end can be done in `O(1)` time.
-
-### 3. `pop()`
-
-```cpp
-void pop();
-```
-
-The `pop()` function removes the last node from the linked list. Since this is a singly linked list, the previous node of `tail` cannot be found directly. Therefore, the list must be traversed from `head` until the node before `tail` is found.
-
-Because of this, `pop()` takes `O(n)` time.
-
-### 4. `traverse()`
-
-```cpp
-void traverse();
-```
-
-The `traverse()` function starts from `head` and prints every node's value until it reaches `NULL`.
-
-In the user's code, the function name is written as:
-
-```cpp
-tarverse();
-```
-
-The correct spelling should be:
-
-```cpp
-traverse();
-```
-
-### 5. Destructor
-
-```cpp
-~Linkedlist();
-```
-
-The destructor releases all nodes from heap memory using `free()`. It starts from `head`, stores the current node in a temporary pointer, moves `head` to the next node, and frees the old node.
-
-This prevents memory leaks.
-
-## Section 2: Internal Representation
-
-## Node Class
-
-The `Node` class is the basic building block of the singly linked list.
+## Class Structure
 
 ```cpp
 template<typename T>
 class Node {
 public:
+    T data;
     Node<T>* next;
-    T value;
+};
+
+template<typename T>
+class LinkedList {
+private:
+    Node<T>* head;
+    int size;
+
+public:
+    LinkedList();
+    ~LinkedList();
+    LinkedList(const LinkedList& other);
+    LinkedList& operator=(const LinkedList& other);
+
+    void push_front(T val);
+    void push_back(T val);
+    void pop_front();
+    void pop_back();
+    void insertAtIndex(int index, T val);
+    void deleteAtIndex(int index);
+    T& get(int index);
+    int search(T val);
+    void traverse();
+    bool isEmpty();
+    T& front();
+    T& back();
+    void clear();
+    int getSize();
 };
 ```
+
+The function `get()` returns `T&` so that the caller can access the original stored value directly instead of receiving only a copy. The `getSize()` function is used as the size function because `size` is already maintained as an internal data member.
+
+---
+
+## `push_front(T val)`
+
+The `push_front(T val)` function inserts a new node at the **beginning** of the linked list.
+
+The function allocates memory for a new node. If raw memory is allocated using `malloc()`, placement `new` is used to construct the node or its stored object correctly. The new node's `next` pointer is set to the current head, and then the head pointer is updated to point to the new node.
+
+If the list is empty, the new node automatically becomes the first node. Finally, `size` is incremented.
+
+### Parameter
+
+- **`T val`**: The value used to initialize the new node.
+
+### Return Type
+
+- **`void`**: The function does not return a value.
+
+### Exception Conditions
+
+- Throws **`std::bad_alloc`** if memory allocation fails.
+
+### Time Complexity
+
+- **Best Case:** `O(1)`
+- **Average Case:** `O(1)`
+- **Worst Case:** `O(1)`
+
+---
+
+## `push_back(T val)`
+
+The `push_back(T val)` function inserts a new node at the **end** of the linked list.
+
+The function first creates a new node. If the list is empty, the new node becomes the head. Otherwise, the function traverses the list until the last node is reached, then updates the last node's `next` pointer to point to the new node.
+
+Finally, `size` is incremented.
+
+### Parameter
+
+- **`T val`**: The value used to initialize the new node.
+
+### Return Type
+
+- **`void`**: The function appends a new node to the list.
+
+### Exception Conditions
+
+- Throws **`std::bad_alloc`** if memory allocation fails.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when the list is empty
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `pop_front()`
+
+The `pop_front()` function removes the first node from the linked list.
+
+If the list is empty, the function throws an exception because no node is available for deletion. Otherwise, a temporary pointer stores the current head node, and the head pointer is updated to the next node.
+
+Before releasing memory, the stored object is destroyed correctly. If placement `new` was used during construction, the destructor must be called explicitly before releasing the raw memory using `free()`. Finally, `size` is decremented.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`void`**: The function removes the first node.
+
+### Exception Conditions
+
+- Throws **`std::underflow_error`** if deletion is attempted on an empty list.
+
+### Time Complexity
+
+- **Best Case:** `O(1)`
+- **Average Case:** `O(1)`
+- **Worst Case:** `O(1)`
+
+---
+
+## `pop_back()`
+
+The `pop_back()` function removes the last node from the linked list.
+
+If the list is empty, the function throws an exception. If the list contains only one node, that node is destroyed and freed, `head` is set to `nullptr`, and `size` is decremented.
+
+If the list contains more than one node, the function traverses the list until it reaches the second-last node. The last node is then destroyed, its memory is released, and the second-last node's `next` pointer is set to `nullptr`.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`void`**: The function removes the last node.
+
+### Exception Conditions
+
+- Throws **`std::underflow_error`** if deletion is attempted on an empty list.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when the list contains one node
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `insertAtIndex(int index, T val)`
+
+The `insertAtIndex(int index, T val)` function inserts a new node at the specified index.
+
+First, the function validates the index. A valid insertion index lies between `0` and `size`, inclusive. If `index == 0`, the function can call `push_front(val)`. If `index == size`, the function can call `push_back(val)`. This avoids duplicate insertion logic and improves maintainability.
+
+For indexes between `1` and `size - 1`, the function traverses the list until it reaches the node immediately before the insertion position. The new node is then linked by updating pointers in the correct order: first the new node points to the next node, then the previous node points to the new node.
+
+### Parameters
+
+- **`int index`**: The position where the new node will be inserted.
+- **`T val`**: The value used to initialize the new node.
+
+### Return Type
+
+- **`void`**: The function inserts a new node at the specified index.
+
+### Exception Conditions
+
+- Throws **`std::out_of_range`** if `index < 0` or `index > size`.
+- Throws **`std::bad_alloc`** if memory allocation fails.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when inserting at the beginning
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `deleteAtIndex(int index)`
+
+The `deleteAtIndex(int index)` function removes the node stored at the specified index.
+
+First, the function checks whether the index is valid. A valid deletion index lies between `0` and `size - 1`. If `index == 0`, the function can call `pop_front()`. If `index == size - 1`, the function can call `pop_back()`. This reuses existing deletion logic for boundary cases.
+
+For other valid indexes, the function traverses the list until it reaches the node immediately before the target node. The previous node is linked directly to the node after the target node, excluding the target node from the list. The removed node is then destroyed and its memory is released.
+
+### Parameter
+
+- **`int index`**: The position of the node to be removed.
+
+### Return Type
+
+- **`void`**: The function removes the node at the specified index.
+
+### Exception Conditions
+
+- Throws **`std::out_of_range`** if `index < 0` or `index >= size`.
+- Throws **`std::underflow_error`** if deletion is attempted on an empty list.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when deleting the first node
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `T& get(int index)`
+
+The `get(int index)` function returns the element stored at the specified index.
+
+Unlike arrays, linked lists do not support direct address calculation using an index. Therefore, the function must traverse the list from the head until the required node is reached.
+
+The function returns a reference (`T&`) instead of a copy. This avoids unnecessary copying and allows the caller to modify the original stored element if required.
+
+### Parameter
+
+- **`int index`**: The position of the element to access.
+
+### Return Type
+
+- **`T&`**: A reference to the element stored at the specified index.
+
+### Exception Conditions
+
+- Throws **`std::out_of_range`** if `index < 0` or `index >= size`.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when accessing the first node
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `int search(T val)`
+
+The `search(T val)` function searches for a specified value in the linked list.
+
+The search starts from the head node and checks each node sequentially. Each stored value is compared with the supplied value using the equality operator (`==`). If a match is found, the function returns the index of the first matching node. If no match is found, it returns `-1`.
+
+### Parameter
+
+- **`T val`**: The value to search for.
+
+### Return Type
+
+- **`int`**: The index of the first matching value, or `-1` if the value is not found.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when the value is stored at the head node
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `void traverse()`
+
+The `traverse()` function visits every node in the linked list and displays each stored element.
+
+Traversal starts from the head and continues by following `next` pointers until the end of the list is reached. The function does not modify the linked list.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`void`**: The function displays all elements and does not return a value.
+
+### Time Complexity
+
+- **Best Case:** `O(n)`
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `bool isEmpty()`
+
+The `isEmpty()` function checks whether the linked list contains no nodes.
+
+The function compares the internal `size` variable with `0`. If `size == 0`, it returns `true`; otherwise, it returns `false`.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`bool`**: Returns `true` if the list is empty; otherwise returns `false`.
+
+### Time Complexity
+
+- **Best Case:** `O(1)`
+- **Average Case:** `O(1)`
+- **Worst Case:** `O(1)`
+
+---
+
+## `T& front()`
+
+The `front()` function returns the first element of the linked list.
+
+The function checks whether the list is empty. If the list is not empty, it returns a reference to the data stored in the head node.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`T&`**: A reference to the first element of the list.
+
+### Exception Conditions
+
+- Throws **`std::underflow_error`** if the list is empty.
+
+### Time Complexity
+
+- **Best Case:** `O(1)`
+- **Average Case:** `O(1)`
+- **Worst Case:** `O(1)`
+
+---
+
+## `T& back()`
+
+The `back()` function returns the last element of the linked list.
+
+The function first checks whether the list is empty. If it is not empty, the list is traversed until the last node is reached, and a reference to the last node's data is returned.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`T&`**: A reference to the last element of the list.
+
+### Exception Conditions
+
+- Throws **`std::underflow_error`** if the list is empty.
+
+### Time Complexity
+
+- **Best Case:** `O(1)` when the list contains only one node
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `void clear()`
+
+The `clear()` function removes all nodes from the linked list.
+
+The function traverses the list from the head node and deletes each node one by one. After all nodes are removed, `head` is set to `nullptr`, and `size` is set to `0`.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`void`**: The function removes all nodes from the linked list.
+
+### Time Complexity
+
+- **Best Case:** `O(n)`
+- **Average Case:** `O(n)`
+- **Worst Case:** `O(n)`
+
+Here, **`n`** represents the number of nodes in the linked list.
+
+---
+
+## `int getSize()`
+
+The `getSize()` function returns the current number of nodes in the linked list.
+
+Since the class maintains a separate `size` variable, this function returns that value directly without traversing the list.
+
+### Parameter
+
+- **None**
+
+### Return Type
+
+- **`int`**: The current number of nodes in the linked list.
+
+### Time Complexity
+
+- **Best Case:** `O(1)`
+- **Average Case:** `O(1)`
+- **Worst Case:** `O(1)`
+
+---
+
+# Section 2: Internal Structure
+
+The **Internal Structure** section explains how the `LinkedList` class is implemented internally and how memory is organized during execution.
+
+The linked list is implemented using two class templates:
+
+- **`Node<T>`**: Represents an individual node.
+- **`LinkedList<T>`**: Manages the collection of nodes and provides the public interface.
 
 Each node contains:
 
-- `value`: stores the data.
-- `next`: stores the address of the next node.
+- A data member of type `T`, which stores the actual value.
+- A pointer named `next`, which stores the address of the next node.
 
-Memory view of one node:
+The `LinkedList` class maintains:
 
-![Node structure draw.io diagram](images/images/node-structure.drawio.svg)
+- **`Node<T>* head`**: Points to the first node of the linked list.
+- **`int size`**: Stores the current number of nodes.
 
-If `next` is `NULL`, that node is the last node of the list.
+Initially, `head` is set to `nullptr`, which means the list is empty. When a new node is inserted, memory is allocated dynamically. Since nodes are allocated independently, linked list elements are not stored in contiguous memory locations.
 
-## Linkedlist Class
+During deletion, the target node is disconnected from the list, its stored object is destroyed correctly, and its memory is released. Unlike a Dynamic Array, the linked list does not have a capacity variable and does not require a shrinking strategy. Deleting a node directly frees that node's memory.
 
-```cpp
-template<typename T>
-class Linkedlist {
-public:
-    Node<T>* head;
-    Node<T>* tail;
-};
-```
+## Memory Layout
 
-The linked list object itself stores only the addresses of the first and last nodes. The actual nodes are dynamically allocated on the heap.
+![LINKED LIST MEMORY DIAGRAM](/docs/design_proposal/images/images/singly-list-memory.drawio.svg)
 
-![Singly linked list memory draw.io diagram](images/images/singly-list-memory.drawio.svg)
+## Template Concept and Generic Type
 
-Here:
+The linked list is implemented using `template<typename T>`. Here, `T` is a placeholder for the actual data type that will be used when an object is created.
 
-- `head` points to the first node.
-- `tail` points to the last node.
-- Every node is allocated using `malloc()`.
-- Every node must later be released using `free()`.
-
-## Section 3: Constructor Logic
-
-User code:
+For example:
 
 ```cpp
-Linkedlist(T val) {
-    head = (Node<T>*)malloc(sizeof(Node<T>));
-    head->value = val;
-    head->next = NULL;
-    tail = head;
-}
+LinkedList<int> numbers;
+LinkedList<double> prices;
+LinkedList<std::string> names;
 ```
 
-Step-by-step explanation:
+This is called **generic programming**. It avoids writing separate linked list classes for different data types. The same code can work with primitive types, Standard Library types, and user-defined classes.
 
-1. Memory is allocated for one node.
-2. The value is stored in the node.
-3. The node's `next` pointer is set to `NULL`.
-4. `head` points to this node.
-5. `tail` also points to this node because there is only one node.
+The type `T` is resolved at compile time, so the implementation remains type-safe while still being reusable.
 
-Memory diagram after constructor:
+## Object-Oriented Programming Principles Used
 
-![Constructor one node draw.io diagram](images/images/constructor-one-node.drawio.svg)
+The implementation uses the following OOP principles:
 
-Improved version with allocation check:
+- **Encapsulation:** `head` and `size` are private, so users cannot directly modify the internal state.
+- **Abstraction:** Users call functions such as `push_front()`, `insertAtIndex()`, and `deleteAtIndex()` without needing to manage pointers manually.
+- **Modularity:** Each operation is implemented as a separate member function with a clear responsibility.
+- **Code Reuse:** `insertAtIndex()` can reuse `push_front()` and `push_back()` for boundary insertions. `deleteAtIndex()` can reuse `pop_front()` and `pop_back()` for boundary deletions.
 
-```cpp
-Linkedlist(T val) {
-    head = (Node<T>*)malloc(sizeof(Node<T>));
+Inheritance and polymorphism are not required because this data structure mainly focuses on efficient node management and a clean container interface.
 
-    if (head == NULL) {
-        cout << "memory allocation failed";
-        tail = NULL;
-        return;
-    }
+## Rule of Three
 
-    head->value = val;
-    head->next = NULL;
-    tail = head;
-}
-```
+Since the linked list manages dynamically allocated memory, it follows the **Rule of Three**:
 
-## Section 4: Push Operation
+1. **Destructor**
+2. **Copy Constructor**
+3. **Copy Assignment Operator**
 
-User code:
+### Destructor
 
-```cpp
-void push(T val) {
-    tail->next = (Node<T>*)malloc(sizeof(Node<T>));
-    tail = tail->next;
-    tail->next = NULL;
-    tail->value = val;
-}
-```
+The destructor traverses the entire list, destroys each node, and releases its memory. This prevents memory leaks when the linked list object goes out of scope.
+---
+![DESTRUCTOR](/docs/design_proposal/images/images/destructor-operation.drawio.svg)
 
-The `push()` function inserts a new node at the end.
+### Copy Constructor
 
-Before `push(40)`:
+The copy constructor performs a **deep copy** of the source list. Instead of copying node addresses, it creates new nodes for every element. As a result, both linked lists own independent memory.
 
-![Push operation before and after draw.io diagram](images/images/push-operation.drawio.svg)
+### Copy Assignment Operator
 
-After `push(40)`:
+The copy assignment operator first releases the memory currently owned by the destination list. It then performs a deep copy of the source list. It should also handle self-assignment safely. This prevents shallow copying, dangling pointers, memory leaks, and double deletion.
 
-The same diagram above shows how the new node is attached after the old tail and how `tail` is moved to the new node.
+---
 
-Improved version with allocation check:
+# Section 3: Complexity Estimates
 
-```cpp
-void push(T val) {
-    Node<T>* newNode = (Node<T>*)malloc(sizeof(Node<T>));
+The following table summarizes the time complexity of each public member function.
 
-    if (newNode == NULL) {
-        cout << "memory allocation failed";
-        return;
-    }
+| Function | Best Case | Average Case | Worst Case | Reason |
+|---|---:|---:|---:|---|
+| `push_front()` | `O(1)` | `O(1)` | `O(1)` | Only updates the new node and head pointer. |
+| `push_back()` | `O(1)` | `O(n)` | `O(n)` | Traverses to the last node unless the list is empty. |
+| `insertAtIndex()` | `O(1)` | `O(n)` | `O(n)` | Boundary insertion is constant; middle insertion requires traversal. |
+| `pop_front()` | `O(1)` | `O(1)` | `O(1)` | Only updates the head pointer. |
+| `pop_back()` | `O(1)` | `O(n)` | `O(n)` | Traverses to the second-last node unless only one node exists. |
+| `deleteAtIndex()` | `O(1)` | `O(n)` | `O(n)` | Boundary deletion is constant; middle deletion requires traversal. |
+| `get()` | `O(1)` | `O(n)` | `O(n)` | Traverses from the head to the required index. |
+| `search()` | `O(1)` | `O(n)` | `O(n)` | Checks nodes sequentially until a match is found. |
+| `traverse()` | `O(n)` | `O(n)` | `O(n)` | Visits every node once. |
+| `isEmpty()` | `O(1)` | `O(1)` | `O(1)` | Compares the stored size with zero. |
+| `front()` | `O(1)` | `O(1)` | `O(1)` | Directly returns the head node's data. |
+| `back()` | `O(1)` | `O(n)` | `O(n)` | Traverses to the last node unless only one node exists. |
+| `clear()` | `O(n)` | `O(n)` | `O(n)` | Deletes every node exactly once. |
+| `getSize()` | `O(1)` | `O(1)` | `O(1)` | Directly returns the stored size value. |
 
-    newNode->value = val;
-    newNode->next = NULL;
+## Complexity Analysis
 
-    if (head == NULL) {
-        head = newNode;
-        tail = newNode;
-        return;
-    }
+The linked list provides efficient insertion and deletion at the beginning because only the head pointer needs to be updated. However, operations at the end or at a specific index may require traversal because a singly linked list does not provide direct access to arbitrary positions.
 
-    tail->next = newNode;
-    tail = newNode;
-}
-```
+Accessing an element by index takes `O(n)` time because the list must be traversed from the head node. Searching also takes `O(n)` in the average and worst cases because each node may need to be checked.
 
-## Section 5: Pop Operation
+Maintaining the `size` variable allows `getSize()` and `isEmpty()` to run in `O(1)` time. The `front()` function is also `O(1)` because the head pointer directly stores the first node. The `back()` function is `O(n)` in a singly linked list because there is no direct pointer to the last node.
 
-User code:
+---
 
-```cpp
-void pop() {
-    if (head == NULL) {
-        cout << "underflow";
-        return;
-    }
+# Section 4: Design Decisions
 
-    if (head == tail) {
-        free(head);
-        head = NULL;
-        tail = NULL;
-        return;
-    }
+## Generic Programming Using Templates
 
-    Node<T>* temp = head;
-    Node<T>* last = tail;
+The linked list is implemented as a class template using `template<typename T>`. This allows one implementation to store different data types without rewriting the code.
 
-    while (temp->next != tail) {
-        temp = temp->next;
-    }
+## Separate Node Class
 
-    temp->next = NULL;
-    tail = temp;
-    free(last);
-}
-```
+Each element is represented by a separate `Node<T>` object. This makes the structure clear: the node stores the data and link, while the `LinkedList<T>` class manages the overall list operations.
 
-### Case 1: Empty List
+## Singly Linked List Design
 
-If `head == NULL`, the list has no nodes.
+A singly linked list was selected because it satisfies the project requirements while using only one pointer per node. Compared with a doubly linked list, it uses less memory and is simpler to implement. The trade-off is that reverse traversal is not directly supported.
 
-At this point, `head = NULL` and `tail = NULL`.
+## Dynamic Memory Allocation
 
-Calling `pop()` here causes underflow because there is nothing to delete.
+Each node is allocated dynamically because the number of elements is not fixed. This allows the list to grow and shrink during runtime.
 
-### Case 2: Only One Node
+If raw memory is allocated using `malloc()`, placement `new` must be used to construct C++ objects properly. During deletion, destructors must be called before memory is released using `free()`. This is necessary because `malloc()` and `free()` do not automatically call constructors or destructors.
 
-Before `pop()`:
+## No Capacity or Shrinking Strategy
 
-![Constructor one node draw.io diagram](images/images/constructor-one-node.drawio.svg)
+Unlike a Dynamic Array, a linked list does not allocate one large memory block and does not maintain a capacity value. Therefore, it does not need a capacity growth or shrinking strategy.
 
-After `pop()`:
+When a node is inserted, memory is allocated only for that node. When a node is deleted, memory for that specific node is released immediately. This means the linked list naturally grows and shrinks node by node.
 
-After deleting the only node, `head = NULL` and `tail = NULL`.
+## Maintaining the Size Variable
 
-The only node is freed using `free()`.
+A dedicated `size` variable stores the current number of nodes. Updating this variable after every insertion and deletion allows the list size to be obtained in constant time.
 
-### Case 3: More Than One Node
+The public function `getSize()` returns this value. It serves the same purpose as a `size()` function in many container libraries, but the name `getSize()` is used here to keep it clear and avoid confusion with the internal `size` data member.
 
-Before `pop()`:
+## Returning a Reference from `get()`
 
-![Pop operation before and after draw.io diagram](images/images/pop-operation.drawio.svg)
+The `get()` function returns a reference (`T&`) instead of a copy. This avoids unnecessary copying and allows direct modification of the stored element when required.
 
-The node before `tail` must be found by traversal.
+## Exception Handling
 
-After `pop()`:
+The implementation checks invalid operations before performing them. Meaningful exceptions should be used:
 
-The same diagram above shows that the old tail node is detached and freed, while the previous node becomes the new tail.
+- **`std::out_of_range`** for invalid indexes
+- **`std::underflow_error`** for deletion from an empty list
+- **`std::bad_alloc`** for memory allocation failure
 
-The old tail node containing `30` is freed.
+Using exceptions prevents undefined behavior and makes the implementation safer and easier to debug.
 
-## Section 6: Traverse Operation
+## Deep Copy Semantics
 
-User code:
+The linked list follows deep-copy semantics through the copy constructor and copy assignment operator. Each copied list owns its own nodes, preventing dangling pointers, shared ownership problems, and double deletion.
 
-```cpp
-void tarverse() {
-    Node<T>* temp = head;
+## Function Reuse
 
-    while (temp != NULL) {
-        cout << temp->value << " ";
-        temp = temp->next;
-    }
-}
-```
+Boundary cases can reuse existing functions:
 
-Traversal starts from `head` and follows `next` pointers until `NULL`.
+- `insertAtIndex(0, val)` can call `push_front(val)`.
+- `insertAtIndex(size, val)` can call `push_back(val)`.
+- `deleteAtIndex(0)` can call `pop_front()`.
+- `deleteAtIndex(size - 1)` can call `pop_back()`.
+- `clear()` can reuse the deletion logic repeatedly until the list becomes empty.
 
-Example:
+This reduces duplicate code and makes the implementation easier to maintain.
 
-![Singly linked list memory draw.io diagram](images/images/singly-list-memory.drawio.svg)
+## Trade-offs
 
-Output:
+Compared with a Dynamic Array, the linked list supports efficient insertion and deletion at the beginning because elements do not need to be shifted. However, random access is slower because the list must be traversed node by node.
 
-`10 20 30`
+The linked list is most suitable when frequent insertions and deletions are required, especially near the beginning of the list. A Dynamic Array is usually better when frequent indexed access is required.
 
-Recommended spelling:
-
-```cpp
-void traverse() {
-    Node<T>* temp = head;
-
-    while (temp != NULL) {
-        cout << temp->value << " ";
-        temp = temp->next;
-    }
-}
-```
-
-## Section 7: Destructor
-
-User code:
-
-```cpp
-~Linkedlist() {
-    while (head != NULL) {
-        Node<T>* temp = head;
-        head = head->next;
-        free(temp);
-    }
-}
-```
-
-The destructor frees every node one by one.
-
-Before destructor:
-
-![Destructor draw.io diagram](images/images/destructor-operation.drawio.svg)
-
-Step-by-step:
-
-1. Store current `head` in `temp`.
-2. Move `head` to the next node.
-3. Free `temp`.
-4. Repeat until `head == NULL`.
-
-After destructor:
-
-After the destructor finishes, `head = NULL` and `tail` should also be treated as invalid. In the improved version, `tail` is explicitly set to `NULL`.
-
-Improved destructor:
-
-```cpp
-~Linkedlist() {
-    while (head != NULL) {
-        Node<T>* temp = head;
-        head = head->next;
-        free(temp);
-    }
-
-    tail = NULL;
-}
-```
-
-## Section 8: Complexity Estimates
-
-| Operation | Time Complexity | Reason |
-|---|---:|---|
-| Constructor | `O(1)` | Only one node is created. |
-| `push(T val)` | `O(1)` | `tail` gives direct access to the end. |
-| `pop()` | `O(n)` | The previous node of `tail` must be found from `head`. |
-| `traverse()` | `O(n)` | Every node is visited once. |
-| Destructor | `O(n)` | Every node must be freed. |
-
-## Section 9: Important Issue With `malloc()` in C++
-
-This is the most important issue in the user's code.
-
-The code uses:
-
-```cpp
-Linkedlist<string> lst("naman");
-```
-
-But nodes are allocated using:
-
-```cpp
-head = (Node<T>*)malloc(sizeof(Node<T>));
-```
-
-`malloc()` only allocates raw memory. It does not call constructors.
-
-This means if `T` is `string`, the `string` object inside the node is not properly created. Therefore this line is unsafe:
-
-```cpp
-head->value = val;
-```
-
-Similarly, `free()` only releases memory. It does not call destructors. So if the node contains a `string`, the internal memory owned by the string may not be cleaned correctly.
-
-Therefore:
-
-```cpp
-Linkedlist<int>
-```
-
-is suitable for this `malloc()` and `free()` implementation.
-
-But:
-
-```cpp
-Linkedlist<string>
-```
-
-is not safe with plain `malloc()` and `free()`.
-
-In real C++ code, `string` and class objects should normally be handled using `new` and `delete`, or better, smart pointers. However, if the requirement is strictly to use `malloc()` and `free()`, then the safest choice is to store simple data types such as `int`, `char`, `float`, or plain structs without constructors and destructors.
-
-## Section 10: Corrected Code Based on User's Implementation
-
-This version keeps the same idea as the user's code but improves spelling and checks whether `malloc()` succeeded.
-
-```cpp
-#include <iostream>
-#include <cstdlib>
-using namespace std;
-
-template<typename T>
-class Node {
-public:
-    Node<T>* next;
-    T value;
-};
-
-template<typename T>
-class Linkedlist {
-public:
-    Node<T>* head;
-    Node<T>* tail;
-
-    Linkedlist(T val) {
-        head = (Node<T>*)malloc(sizeof(Node<T>));
-
-        if (head == NULL) {
-            cout << "memory allocation failed";
-            tail = NULL;
-            return;
-        }
-
-        head->value = val;
-        head->next = NULL;
-        tail = head;
-    }
-
-    void push(T val) {
-        Node<T>* newNode = (Node<T>*)malloc(sizeof(Node<T>));
-
-        if (newNode == NULL) {
-            cout << "memory allocation failed";
-            return;
-        }
-
-        newNode->value = val;
-        newNode->next = NULL;
-
-        if (head == NULL) {
-            head = newNode;
-            tail = newNode;
-            return;
-        }
-
-        tail->next = newNode;
-        tail = newNode;
-    }
-
-    void pop() {
-        if (head == NULL) {
-            cout << "underflow";
-            return;
-        }
-
-        if (head == tail) {
-            free(head);
-            head = NULL;
-            tail = NULL;
-            return;
-        }
-
-        Node<T>* temp = head;
-        Node<T>* last = tail;
-
-        while (temp->next != tail) {
-            temp = temp->next;
-        }
-
-        temp->next = NULL;
-        tail = temp;
-        free(last);
-    }
-
-    void traverse() {
-        Node<T>* temp = head;
-
-        while (temp != NULL) {
-            cout << temp->value << " ";
-            temp = temp->next;
-        }
-    }
-
-    ~Linkedlist() {
-        while (head != NULL) {
-            Node<T>* temp = head;
-            head = head->next;
-            free(temp);
-        }
-
-        tail = NULL;
-    }
-};
-
-int main() {
-    Linkedlist<int> lst(10);
-    lst.push(20);
-    lst.push(30);
-    lst.traverse();
-
-    return 0;
-}
-```
-
-## Section 11: Design Decision
-
-## Why Singly Linked List Is Used
-
-A singly linked list is used because it is simple and memory-efficient. Each node stores only one pointer, `next`, so it requires less memory than a doubly linked list. This is useful when forward traversal is enough.
-
-In this implementation, the `tail` pointer is also maintained. Because of this, insertion at the end using `push()` becomes efficient and takes `O(1)` time.
-
-The main limitation is deletion from the end. Since there is no `prev` pointer, the previous node of `tail` cannot be found directly. So `pop()` must traverse from `head`, making it an `O(n)` operation.
-
-## Why `head` and `tail` Are Maintained
-
-Maintaining both `head` and `tail` improves the linked list design:
-
-- `head` allows traversal from the beginning.
-- `tail` allows fast insertion at the end.
-- If only `head` were maintained, `push()` would require traversal to the last node every time.
-
-With `tail`, `push()` is `O(1)` instead of `O(n)`.
-
-## Why `malloc()` and `free()` Are Used
-
-`malloc()` and `free()` are used because the requirement is to allocate memory manually without using `new` and `delete`.
-
-However, this style is closer to C than modern C++. It should be used carefully in C++ because constructors and destructors are not automatically called.
-
-## Final Notes
-
-The algorithm and pointer logic in the user's linked list are mostly correct. The main improvements are:
-
-- Check if `malloc()` fails.
-- Use `traverse()` instead of `tarverse()`.
-- Avoid `Linkedlist<string>` when using plain `malloc()` and `free()`.
-- Use simple types like `int` for this implementation.
-- Free all nodes in the destructor to prevent memory leaks.
+---
