@@ -813,4 +813,6 @@ CMakeFiles/main.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h \
   /Users/aayushsharma/dslibrary/include/Vector.h \
-  /Users/aayushsharma/dslibrary/include/Vector.tpp
+  /Users/aayushsharma/dslibrary/include/Vector.tpp \
+  /Users/aayushsharma/dslibrary/include/List.h \
+  /Users/aayushsharma/dslibrary/include/List.tpp
