@@ -1,5 +1,5 @@
 **Project Title:** Building a Data Structures Library and Redis Lite  
-**Student Name:** Suman Mondal  
+**Student Name:**   Aayush Sharma
 **Date:** 07 July 2026
 
 # Linked List Design Proposal
