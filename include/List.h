@@ -6,29 +6,34 @@
 #include <stdexcept>
 
 template<typename T>
-class Node {
+class ListNode {
 public:
-    Node<T>* next;
+    ListNode<T>* next;
     T value;
 
-    Node(T val);
+    ListNode(T val);
+    ~ListNode();
 };
 
 template<typename T>
 class Linkedlist {
 public:
-    Node<T>* head;
-    Node<T>* tail;
+    ListNode<T>* head;
+    ListNode<T>* tail;
     int count;
 
     Linkedlist();
+    Linkedlist(const Linkedlist& ls);
+    Linkedlist& operator=(const Linkedlist& ls);
+    ~Linkedlist();
 
-    void push(T val);
+    void push(T& val);
     void pop();
 
-    T& operator[](int idx);
+    int Size();
+    bool isempty();
 
-    ~Linkedlist();
+    T& operator[](int idx);
 };
 
 #include "List.tpp"
