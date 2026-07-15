@@ -227,5 +227,19 @@ V& HashMap<K,V>::operator[](const K& key)
 
     return ptr->Value;
 }
+template<typename K, typename V>
+void HashMap<K, V>::keys() const
+{
+    for(int i = 0; i < v.Size(); i++)
+    {
+        Node<HashNode<K, V>>* ptr = v[i].begin();
+
+        while(ptr != NULL)
+        {
+            std::cout << ptr->value.Key << '\n';
+            ptr = ptr->next;
+        }
+    }
+}
 
 #endif

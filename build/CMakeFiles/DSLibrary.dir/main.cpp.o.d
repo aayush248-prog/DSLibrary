@@ -978,10 +978,12 @@ CMakeFiles/DSLibrary.dir/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stack \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h \
+  /Users/aayushsharma/dslibrary/include/Redislite.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream \
+  /Users/aayushsharma/dslibrary/include/Hashmap.h \
   /Users/aayushsharma/dslibrary/include/Vector.h \
   /Users/aayushsharma/dslibrary/include/../src/Vector.tpp \
   /Users/aayushsharma/dslibrary/include/List.h \
   /Users/aayushsharma/dslibrary/include/../src/List.tpp \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream \
-  /Users/aayushsharma/dslibrary/include/Hashmap.h \
-  /Users/aayushsharma/dslibrary/include/../src/Hashmap.tpp
+  /Users/aayushsharma/dslibrary/include/../src/Hashmap.tpp \
+  /Users/aayushsharma/dslibrary/include/../src/Redislite.tpp

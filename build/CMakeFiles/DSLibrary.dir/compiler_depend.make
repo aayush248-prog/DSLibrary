@@ -980,13 +980,18 @@ CMakeFiles/DSLibrary.dir/main.cpp.o: /Users/aayushsharma/dslibrary/main.cpp \
   /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stdarg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stdint.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/21/share/asan_ignorelist.txt \
   /Users/aayushsharma/dslibrary/src/Hashmap.tpp \
   /Users/aayushsharma/dslibrary/src/List.tpp \
+  /Users/aayushsharma/dslibrary/src/Redislite.tpp \
   /Users/aayushsharma/dslibrary/src/Vector.tpp \
   /Users/aayushsharma/dslibrary/include/Hashmap.h \
   /Users/aayushsharma/dslibrary/include/List.h \
+  /Users/aayushsharma/dslibrary/include/Redislite.h \
   /Users/aayushsharma/dslibrary/include/Vector.h
 
+
+/Users/aayushsharma/dslibrary/include/Redislite.h:
 
 /Users/aayushsharma/dslibrary/src/Vector.tpp:
 
@@ -1193,6 +1198,8 @@ CMakeFiles/DSLibrary.dir/main.cpp.o: /Users/aayushsharma/dslibrary/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/math.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/locale:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/21/share/asan_ignorelist.txt:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iostream:
 
@@ -2517,6 +2524,8 @@ CMakeFiles/DSLibrary.dir/main.cpp.o: /Users/aayushsharma/dslibrary/main.cpp \
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/ranges_move_backward.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/find_end.h:
+
+/Users/aayushsharma/dslibrary/src/Redislite.tpp:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__verbose_trap:
 

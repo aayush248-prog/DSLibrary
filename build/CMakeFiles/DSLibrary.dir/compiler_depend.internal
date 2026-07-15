@@ -981,10 +981,13 @@ CMakeFiles/DSLibrary.dir/main.cpp.o
  /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stdarg.h
  /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stddef.h
  /Library/Developer/CommandLineTools/usr/lib/clang/21/include/stdint.h
+ /Library/Developer/CommandLineTools/usr/lib/clang/21/share/asan_ignorelist.txt
  /Users/aayushsharma/dslibrary/src/Hashmap.tpp
  /Users/aayushsharma/dslibrary/src/List.tpp
+ /Users/aayushsharma/dslibrary/src/Redislite.tpp
  /Users/aayushsharma/dslibrary/src/Vector.tpp
  /Users/aayushsharma/dslibrary/include/Hashmap.h
  /Users/aayushsharma/dslibrary/include/List.h
+ /Users/aayushsharma/dslibrary/include/Redislite.h
  /Users/aayushsharma/dslibrary/include/Vector.h
 

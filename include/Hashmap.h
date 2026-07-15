@@ -64,6 +64,7 @@ public:
     void pop(const K& key);
 
     V& operator[](const K& key);
+    void keys() const;
 };
 
 #include "../src/Hashmap.tpp"
