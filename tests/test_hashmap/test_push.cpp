@@ -18,7 +18,7 @@ TEST(PushTest, InsertMultipleElements)
     map.push(2,20);
     map.push(3,30);
 
-    EXPECT_EQ(map.find(1)->Value,10);
+    EXPECT_EQ(map.find(1)->Value,10); 
     EXPECT_EQ(map.find(2)->Value,20);
     EXPECT_EQ(map.find(3)->Value,30);
 }
